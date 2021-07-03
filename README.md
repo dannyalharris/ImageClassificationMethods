@@ -7,14 +7,14 @@ There are many methods that we can use to classify the images. The methods are s
  image classfication methods:
  1. manual
  2. automated:
-    a. pixel based
-    b. object oriented
-    c. supervise
-      i. parametric
-        1. maximum likehood
-        2. maximum distance
-        3. mahalanobis distance
-      ii. non-parametric
+    1. pixel based
+    2. object oriented
+    3. supervise
+      1. parametric
+        1.	maximum likehood
+        2.	maximum distance
+        3.	mahalanobis distance
+      2. non-parametric
         1. neural network
         2. support vector machine
         3. k nearest neighbor
@@ -23,9 +23,9 @@ There are many methods that we can use to classify the images. The methods are s
         6. decision tree
         7. random forest
         8. parallel pipe
-    d. unsupervise
-      i. k means
-      ii. iso data
-    e. hybrid
-      i. classifier ensemble
-      ii. multiple classifier system
+    4. unsupervise
+      1. k means
+      2. iso data
+    5. hybrid
+      1. classifier ensemble
+      2. multiple classifier system
