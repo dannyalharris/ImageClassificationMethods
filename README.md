@@ -25,7 +25,7 @@ There are many methods that we can use to classify the images. The methods are s
         	8. parallel pipe
     4. unsupervise
     	1. k means
-    	2. iso data
+    	2.  iso data
     5. hybrid
     	1. classifier ensemble
     	2. multiple classifier system

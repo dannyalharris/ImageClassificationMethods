@@ -167,7 +167,7 @@ for image_path in images_list:
     #      (cv2.arcLength(cnt, True) / cv2.arcLength(hull, True)),(contour_area / rect_area),(contour_area / hull_area),
     #      (rect[1][0] / rect[1][1]),(hull_area / rect_area),len(corners),amount_h_corners]
 
-    with open('data.csv', 'a',newline='\n',encoding='utf-8')as f_object:
+    with open('feature.csv', 'a',newline='\n',encoding='utf-8')as f_object:
         # Pass the file object and a list
         # of column names to DictWriter()
         # You will get a object of DictWriter
@@ -178,9 +178,3 @@ for image_path in images_list:
 
         # Close the file object
         f_object.close()
-
-
-
-
-
-
