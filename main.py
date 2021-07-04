@@ -14,10 +14,7 @@ number_files = len(list)
 print(number_files)
 images_list = []
 valid_images = [".jpg",".png"]
-#header = ['id','contour_points','amount_contours','contour_length_area_ratio','contour_length_rect_area_ratio','contour_length_hull_area_ratio','contour_rect_length_ratio','contour_hull_length_ratio','extent','solidity','aspect_ratio','hull_rectangle_ratio','corners','harris_corners']
-#f = open('data.csv','w')
-#writer = csv.writer(f)
-#writer.writerow(header)
+
 for f in os.listdir(image_folder):
     images_list.append(os.path.join(image_folder,f))
 
@@ -57,14 +54,14 @@ for image_path in images_list:
 
     contours, _ = cv2.findContours(image_thresh, cv2.RETR_TREE, cv2.cv2.CHAIN_APPROX_NONE)
 
-    i = 0
-    for cnt in contours:
-        #print(cv2.contourArea(cnt))
-        im = image_copy.copy()
-        cv2.drawContours(im, cnt, -1, (0, 255, 0), 2, cv2.LINE_AA)
-        plt.subplot(1, len(contours), i + 1)
-        plt.imshow(im, "gray")
-        i = i + 1
+    #i = 0
+    #for cnt in contours:
+    #    #print(cv2.contourArea(cnt))
+    #    im = image_copy.copy()
+    #    cv2.drawContours(im, cnt, -1, (0, 255, 0), 2, cv2.LINE_AA)
+    #    plt.subplot(1, len(contours), i + 1)
+    #    plt.imshow(im, "gray")
+    #    i = i + 1
 
     # get greatest contour by area
     im_boundary = (image_thresh.shape[0] - 1) * (image_thresh.shape[1] - 1)
@@ -87,11 +84,31 @@ for image_path in images_list:
     cv2.drawContours(to_show_box, [box], 0, (0, 0, 255), 2)
     plt.imshow(to_show_box)
 
+    a = rect[1][0] / rect[1][1]
+    #print(a)
+
     hull = cv2.convexHull(cnt)
     hull_area = cv2.contourArea(hull)
     to_show_hull = image_copy.copy()
     cv2.drawContours(to_show_hull, [hull], 0, (255, 0, 0), 2)
     plt.imshow(to_show_hull)
+
+    contour_perimeters = cv2.arcLength(cnt, True)
+    approx = cv2.approxPolyDP(cnt, 0.001 * contour_perimeters, True)
+    approximation_area = cv2.contourArea(approx)
+    to_show_approx = image_copy.copy()
+    cv2.drawContours(to_show_approx, [approx], -1, (0, 0, 255), 3)
+    plt.imshow(to_show_approx)
+
+    # Detect corners from grayscale image
+    corners = cv2.goodFeaturesToTrack(np.float32(image_gray), 100, 0.01, 10)
+    corners = np.int0(corners)
+    to_show_corners = image_copy.copy()
+    for corner in corners:
+        x, y = corner.ravel()
+        cv2.circle(to_show_corners, (x, y), 3, (80, 127, 255), 2)
+    plt.imshow(to_show_corners)
+    #print("good corners", len(corners))
 
     # Detect corners from grayscale image
     corners = cv2.goodFeaturesToTrack(np.float32(image_gray), 100, 0.01, 10)
@@ -120,32 +137,30 @@ for image_path in images_list:
     index = index.rstrip('.png')
     # Store features as dictionary
     data = {
-        "id": index,
         "contour_points": len(cnt),
         "amount_contours": len(contours),
-        "contour_length_area_ratio": (
-                cv2.arcLength(cnt, True) / contour_area
-        ),
-        "contour_length_rect_area_ratio": cv2.arcLength(cnt, True) / rect_area,
-        "contour_length_hull_area_ratio": cv2.arcLength(cnt, True) / hull_area,
-        "contour_rect_length_ratio": (
-                cv2.arcLength(cnt, True) / (2 * (rect[1][0] + rect[1][1]))
-        ),
-        "contour_hull_length_ratio": (
-                cv2.arcLength(cnt, True) / cv2.arcLength(hull, True)
-        ),
-        "extent": contour_area / rect_area,
-        "solidity": contour_area / hull_area,
-        "aspect_ratio": rect[1][0] / rect[1][1],
-        "hull_rectangle_ratio": hull_area / rect_area,
+        "rect_area": rect_area,
+        "hull_area": hull_area,
+        "approximation_area": approximation_area,
+        "contour_perimeters": contour_perimeters,
         "corners": len(corners),
         "harris_corners": amount_h_corners,
-        "Type": 'Kamm'
+        "ratio_wide_length": rect[1][0] / rect[1][1],
+        "contour_length_area_ratio": contour_perimeters / contour_area,
+        "contour_length_rect_area_ratio": contour_perimeters / rect_area,
+        "contour_length_hull_area_ratio": contour_perimeters / hull_area,
+        "contour_rect_length_ratio": contour_perimeters / (2 * (rect[1][0] + rect[1][1])),
+        "contour_hull_length_ratio": contour_perimeters / cv2.arcLength(hull, True),
+        "extent": contour_area / rect_area,
+        "solidity": contour_area / hull_area,
+        "hull_rectangle_ratio": hull_area / rect_area,
+        "Type": 1
     }
     print(data)
-    field_names = ['id', 'contour_points', 'amount_contours', 'contour_length_area_ratio', 'contour_length_rect_area_ratio',
-              'contour_length_hull_area_ratio', 'contour_rect_length_ratio', 'contour_hull_length_ratio', 'extent',
-              'solidity', 'aspect_ratio', 'hull_rectangle_ratio', 'corners', 'harris_corners','Type']
+    field_names = ["contour_points", "amount_contours", "rect_area", "hull_area", "approximation_area",
+        "contour_perimeters", "corners", "harris_corners","ratio_wide_length", "contour_length_area_ratio",
+        "contour_length_rect_area_ratio", "contour_length_hull_area_ratio",
+        "contour_rect_length_ratio", "contour_hull_length_ratio", "extent", "solidity", "hull_rectangle_ratio", "Type"]
 
     #data1 = [index,len(cnt),len(contours),(cv2.arcLength(cnt, True) / contour_area),
     #      cv2.arcLength(cnt, True) / rect_area,cv2.arcLength(cnt, True) / hull_area,(cv2.arcLength(cnt, True) / (2 * (rect[1][0] + rect[1][1]))),
