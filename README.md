@@ -23,6 +23,7 @@ There are many methods that we can use to classify the images. The methods are s
         	6. decision tree
         	7. random forest
         	8. parallel pipe
+			9. naive bayes
     4. unsupervise
     	1. k means
     	2.  iso data
