@@ -32,4 +32,4 @@ There are many methods that we can use to classify the images. The methods are s
     	2. multiple classifier system
 
 
-![Validation Accuracy Across Different Methods](https://github.com/dannyalharris/ImageClassificationMethods/tree/main/result/comparison-between-methods.PNG)
+![Validation Accuracy Across Different Methods](https://github.com/dannyalharris/ImageClassificationMethods/blob/main/result/comparison-between-methods.PNG)
